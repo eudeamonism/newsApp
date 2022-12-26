@@ -6,7 +6,7 @@ const zz = process.env.pazzwerd;
 const z2 = process.env.Salty;
 const bodyParser = require('body-parser');
 
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 
 const router = require('./routes/users');
 //Session, cookies
@@ -45,7 +45,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 //router starter
 app.use(router);
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(
 	session({
 		secret: z2,
@@ -66,11 +66,9 @@ app.post('/login', (req, res) => {
 				if (req.session) {
 					req.session.user = { userId: user.userId, username: user.username };
 				}
-                console.log(user.userid);
-                console.log(req.cookies)
-                console.log('=================')
-                console.log(req.session)
-				res.redirect('/articles');
+				console.log(user.userid);
+				res.render('add-article');
+				// res.redirect('/articles');
 			} else {
 				console.log('Not Success!');
 				res.render('login', { message: 'Username or Password not correct!' });
@@ -84,21 +82,28 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/add-article', (req, res) => {
-res.render('add-article')
-})
+	res.render('add-article');
+});
 
 app.post('/add-article', (req, res) => {
+	// let userId = req.session.user.userId;
 	let title = req.body.title;
 	let description = req.body.description;
-    let userId = req.session.user.userId;
 
+	db.oneOrNone('SELECT userid FROM users').then((user) => {
+		// user ={userid: 11}
+		// user.userid
+		let userId = user.userid
 
-	db.none('INSERT INTO articles(title,body,userid) VALUES($1,$2,$3)', [
-		title,
-		description,
-		userId,
-	]).then(() => {
-		res.send('SUCCESS');
+		
+		db.none('INSERT INTO articles(title,body,userid) VALUES($1,$2,$3)', [
+			title,
+			description,
+			userId,
+		]).then(() => {
+			console.log('This is userId' + userId);
+			res.send('SUCCESS');
+		});
 	});
 });
 

@@ -1,0 +1,44 @@
+/* VS CODE link to PostgreSQL
+localhost -> postgres -> ...
+
+
+INTERNAL VSCODE POSTGRESQL
+--CREATE TABLE EMP(empid INTEGER, empname varchar(50), empAddr TEXT);
+
+--INSERT INTO EMP(empid, empname, empaddr) VALUES (1, 'Sandy','Dummy St.');
+
+SELECT * FROM EMP;
+
+FOR SECURING YOUR PASSWORD TO YOUR OWN DATABASE
+utilize npm i dotenv package and set up variable which you then use in place of your PASSWORD
+It requires the use of built in express function path, I believe. */
+
+//Registration
+//we added name="password/username" b/c needed for req.body...
+app.post('/register', (req, res) => {
+	let username = req.body.username;
+	let password = req.body.password;
+	db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username]).then(
+		(user) => {
+			if (user) {
+				res.render('register', { message: 'User name already exists!' });
+			} else {
+				bcrypt.genSalt(SALT_ROUNDS, function (err, salt) {
+					bcrypt.hash(myPlaintextPassword, salt, function (err, hash) {
+						db.none('INSERT INTO users(username, password) VALUES($1, $2)', [
+							username,
+							hash,
+						])
+							.then(res.render('/register'))
+							.catch((err) => {
+								console.log(err);
+							});
+					});
+				});
+			}
+		}
+	);
+});
+
+
+

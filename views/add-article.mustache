@@ -1,0 +1,27 @@
+{{> header}}
+
+
+<h1>Add Article</h1>
+{{> nav}}
+
+<form action="/add-article" method="POST">
+    <div class="mb-3">
+        <label for="articleTitle" class="form-label">Title</label>
+        <input type="text" class="form-control" id="articleTitle" name="title" placeholder="Title" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" rows="6" name="description" placeholder="Write your article here..."
+            required></textarea>
+    </div>
+    <button class="btn btn-primary btn-lg" type="submit">Submit form</button>
+</form>
+
+
+
+
+
+
+
+
+{{> footer}}

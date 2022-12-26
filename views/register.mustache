@@ -1,0 +1,25 @@
+{{> header}}
+
+<body>
+    <h1>Register</h1>
+    {{> nav}}
+    <!--We added action and method to form-->
+    <form action="/register" method="POST">
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">User Name</label>
+            <input type="text" name="username" class="form-control" placeholder="Enter user name">
+
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Pazzwerd">
+            <div id="emailHelp" class="form-text">Don't share your password with just anyone.&#x1F5FB;</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+        {{#message}}
+        <div class="alert alert-danger" role="alert">{{message}}</div>
+        {{/message}}
+    </form>
+    </div>
+    {{> footer}}

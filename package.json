@@ -1,0 +1,25 @@
+{
+  "name": "newsapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eudeamonism",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.1",
+    "connect-pg-simple": "^8.0.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-routes": "^1.0.1",
+    "express-session": "^1.17.3",
+    "morgan": "^1.10.0",
+    "mustache-express": "^1.3.2",
+    "nodemon": "^2.0.20",
+    "pg-promise": "^10.15.4"
+  }
+}

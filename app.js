@@ -67,8 +67,8 @@ app.post('/login', (req, res) => {
 					req.session.user = { userId: user.userId, username: user.username };
 				}
 				console.log(user.userid);
-				res.render('add-article');
-				// res.redirect('/articles');
+				res.redirect('articles');
+				// res.redirect('articles');
 			} else {
 				console.log('Not Success!');
 				res.render('login', { message: 'Username or Password not correct!' });
@@ -86,16 +86,13 @@ app.get('/add-article', (req, res) => {
 });
 
 app.post('/add-article', (req, res) => {
-	// let userId = req.session.user.userId;
 	let title = req.body.title;
 	let description = req.body.description;
 
 	db.oneOrNone('SELECT userid FROM users').then((user) => {
-		// user ={userid: 11}
-		// user.userid
-		let userId = user.userid
+        let userId = user.userid;
+        let username = req.user.username
 
-		
 		db.none('INSERT INTO articles(title,body,userid) VALUES($1,$2,$3)', [
 			title,
 			description,
@@ -104,13 +101,27 @@ app.post('/add-article', (req, res) => {
 			console.log('This is userId' + userId);
 			res.send('SUCCESS');
 		});
+
+		res.render('login', {
+			message: "Either you didn't log in or do not have an account",
+		});
 	});
 });
 
 app.get('/articles', (req, res) => {
-	// res.render(FILENAME) no extensions, no backslash
-	//passing object KEY: REQUEST.SESSION.PARAMETER.DB
-	res.render('articles', { username: req.session.user.username });
+	db.oneOrNone('SELECT userid FROM users').then((user) => {
+		let userId = user.userid;
+		//fetch articles
+		db.any('SELECT articleid, title, body from articles WHERE userid = $1', [
+			userId,
+		])
+			.then((articles) => {
+				res.render('articles', { articles });
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	});
 });
 
 app.post('/register', (req, res) => {
@@ -138,8 +149,6 @@ app.post('/register', (req, res) => {
 	);
 });
 
-//res.render('!INSERT PAGE NAME HERE!') --views page w/o extension
-//This is just used to display the page
 app.get('/register', (req, res) => {
 	res.render('register');
 });

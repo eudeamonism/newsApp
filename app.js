@@ -1,3 +1,7 @@
+//JWT
+let jwt = require('jsonwebtoken')
+const sequelize = require('sequelize')
+//
 const pazzwerd = require('dotenv').config();
 const express = require('express');
 const app = express();
@@ -46,6 +50,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //router starter
 app.use(router);
 app.use(cookieParser());
+app.use(express.json())
 app.use(
 	session({
 		secret: z2,
@@ -55,9 +60,10 @@ app.use(
 );
 
 app.post('/login', (req, res) => {
+    //let {username, password} = req.body
 	let username = req.body.username;
 	let password = req.body.password;
-	db.oneOrNone(
+	db.one(
 		'SELECT userid, username, password FROM users WHERE username = $1',
 		[username]
 	)
@@ -89,21 +95,15 @@ app.post('/add-article', (req, res) => {
 	let title = req.body.title;
 	let description = req.body.description;
 
-	db.oneOrNone('SELECT userid FROM users').then((user) => {
+	db.one('SELECT userid FROM users').then((user) => {
         let userId = user.userid;
-        let username = req.user.username
 
 		db.none('INSERT INTO articles(title,body,userid) VALUES($1,$2,$3)', [
 			title,
 			description,
 			userId,
 		]).then(() => {
-			console.log('This is userId' + userId);
-			res.send('SUCCESS');
-		});
-
-		res.render('login', {
-			message: "Either you didn't log in or do not have an account",
+			res.render('articles');
 		});
 	});
 });
